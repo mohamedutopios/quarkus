@@ -1,0 +1,101 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.11.1
+    app.quarkus.io/commit-id: 2d56182550acc84cd175f2e78b373cd7d3a802fe
+    app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+    app.quarkus.io/build-timestamp: 2024-06-06 - 13:52:23 +0000
+  labels:
+    app.kubernetes.io/name: contactapp
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: contactapp
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: contactapp
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.11.1
+    app.quarkus.io/commit-id: 2d56182550acc84cd175f2e78b373cd7d3a802fe
+    app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+    app.quarkus.io/build-timestamp: 2024-06-06 - 13:52:23 +0000
+  labels:
+    app.kubernetes.io/name: contactapp
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: contactapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: contactapp
+      app.kubernetes.io/version: 1.0-SNAPSHOT
+  template:
+    metadata:
+      annotations:
+        app.quarkus.io/quarkus-version: 3.11.1
+        app.quarkus.io/commit-id: 2d56182550acc84cd175f2e78b373cd7d3a802fe
+        app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+        app.quarkus.io/build-timestamp: 2024-06-06 - 13:52:23 +0000
+      labels:
+        app.kubernetes.io/managed-by: quarkus
+        app.kubernetes.io/name: contactapp
+        app.kubernetes.io/version: 1.0-SNAPSHOT
+    spec:
+      containers:
+        - image: contact-app-image:latest
+          imagePullPolicy: Never
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: contactapp
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          startupProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/started
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10

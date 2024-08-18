@@ -1,0 +1,109 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.10.2
+    app.quarkus.io/commit-id: eb249ef4a023991a0717063705e9d5b9601025a6
+    app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+    app.quarkus.io/build-timestamp: 2024-06-07 - 11:54:30 +0000
+  labels:
+    app.kubernetes.io/name: quote
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: quote
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: quote
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.10.2
+    app.quarkus.io/commit-id: eb249ef4a023991a0717063705e9d5b9601025a6
+    app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+    app.quarkus.io/build-timestamp: 2024-06-07 - 11:54:30 +0000
+  labels:
+    app.kubernetes.io/name: quote
+    app.kubernetes.io/version: 1.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: quote
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: quote
+      app.kubernetes.io/version: 1.0-SNAPSHOT
+  template:
+    metadata:
+      annotations:
+        app.quarkus.io/quarkus-version: 3.10.2
+        app.quarkus.io/commit-id: eb249ef4a023991a0717063705e9d5b9601025a6
+        app.quarkus.io/vcs-uri: https://github.com/utopios/cloud_native_juin_25.git
+        app.quarkus.io/build-timestamp: 2024-06-07 - 11:54:30 +0000
+      labels:
+        app.kubernetes.io/managed-by: quarkus
+        app.kubernetes.io/name: quote
+        app.kubernetes.io/version: 1.0-SNAPSHOT
+    spec:
+      containers:
+        - env:
+            - name: AUTHOR_API
+              value: http://author.default.svc.custer.local:8080
+            - name: DB_URL
+              value: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+            - name: DB_USERNAME
+              value: sa
+            - name: DB_PASSWORD
+              value: sa
+            - name: DB_STRATEGY
+              value: drop-and-create
+          image: quote-microservice-image
+          imagePullPolicy: Never
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: quote
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          startupProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /q/health/started
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-deployment
+  namespace: tp-kubernetes
+spec:
+  
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tp-vote
+  template:    
+    metadata:
+      name: tp-vote
+      namespace: tp-kubernetes
+      labels:
+        app: tp-vote
+
+    spec:
+      containers:
+        - name: vote
+          image: tp-vote
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"

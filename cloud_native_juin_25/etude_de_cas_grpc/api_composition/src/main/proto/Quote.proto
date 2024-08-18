@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "quoteProto";
+option java_outer_classname = "QuoteProto";
+
+package grpcQuote;
+
+service QuoteGrpc {
+  rpc getQuoteById (QuoteGetById) returns (QuoteGet) {}
+  rpc postQuote (QuotePost) returns (QuoteGet) {}
+}
+
+
+message QuoteGetById {
+  int64 id = 1;
+}
+
+message QuotePost {
+  string content = 2;
+  int64 authorId = 3;
+}
+
+message QuoteGet {
+   int64 id = 1;
+   string content = 2;
+   int64 authorId = 3;
+}

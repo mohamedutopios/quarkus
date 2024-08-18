@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "authorProto";
+option java_outer_classname = "AuthorProto";
+
+package grpcAuthor;
+
+service AuthorGrpc {
+  rpc getAuthorById (AuthorGetById) returns (AuthorGet) {}
+  rpc postIssue (AuthorPost) returns (AuthorGet) {}
+}
+
+
+message AuthorGetById {
+  int64 id = 1;
+}
+
+message AuthorPost {
+  string firstname = 2;
+  string   lastname = 3;
+}
+
+message AuthorGet {
+  int64 id = 1;
+  string firstname = 2;
+  string   lastname = 3;
+}
