@@ -9,6 +9,7 @@ public class Product extends PanacheEntity {
     public String description;
     public double price;
     private int stock;
+    public boolean available;
 
     public String getName() {
         return name;

@@ -1,0 +1,10 @@
+- Démarrez l'application Quarkus.
+- **Appelez l'endpoint `Resource1` :**
+  - URL : `http://localhost:8080/resource1`
+  - Réponse attendue : `Resource 1: Counter = 1`
+- **Appelez l'endpoint `Resource2` :**
+  - URL : `http://localhost:8080/resource2`
+  - Réponse attendue : `Resource 2: Counter = 2`
+- **Appelez à nouveau l'endpoint `Resource1` :**
+  - URL : `http://localhost:8080/resource1`
+  - Réponse attendue : `Resource 1: Counter = 3`
