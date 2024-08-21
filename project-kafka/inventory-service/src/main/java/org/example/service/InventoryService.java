@@ -1,6 +1,5 @@
 package org.example.service;
 
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -8,6 +7,7 @@ import org.example.entity.ProductInventory;
 import org.example.kafka.InventoryKafkaProducer;
 import org.example.repository.ProductInventoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -21,6 +21,34 @@ public class InventoryService {
 
     public Optional<ProductInventory> findByProductId(Long productId) {
         return productInventoryRepository.findByProductId(productId);
+    }
+
+    public List<ProductInventory> findAll() {
+        return productInventoryRepository.listAll();
+    }
+
+    @Transactional
+    public ProductInventory createInventory(Long productId, int quantity) {
+        ProductInventory productInventory = new ProductInventory();
+        productInventory.setProductId(productId);
+        productInventory.setQuantity(quantity);
+        productInventoryRepository.persist(productInventory);
+        return productInventory;
+    }
+
+    @Transactional
+    public ProductInventory updateInventory(Long id, int quantity) {
+        ProductInventory productInventory = productInventoryRepository.findById(id);
+        if (productInventory != null) {
+            productInventory.setQuantity(quantity);
+            productInventoryRepository.persist(productInventory);
+        }
+        return productInventory;
+    }
+
+    @Transactional
+    public boolean deleteInventory(Long id) {
+        return productInventoryRepository.deleteById(id);
     }
 
     @Transactional
@@ -72,4 +100,3 @@ public class InventoryService {
         return productInventory;
     }
 }
-
