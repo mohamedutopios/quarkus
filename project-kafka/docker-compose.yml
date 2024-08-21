@@ -22,3 +22,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
     depends_on:
       - zookeeper
+
+# docker exec -it project-kafka-kafka-1 bash
+
+# /bin/kafka-topics.sh --create --topic product-status --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+# /bin/kafka-topics.sh --create --topic order-requests --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+# /bin/kafka-topics.sh --create --topic order-responses --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
